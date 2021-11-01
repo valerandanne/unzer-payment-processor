@@ -47,8 +47,8 @@ class PaymentProcessorControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-         testRestTemplate = new TestRestTemplate();
-         server = MockRestServiceServer.bindTo(restTemplate).build();
+        testRestTemplate = new TestRestTemplate();
+        server = MockRestServiceServer.bindTo(restTemplate).build();
     }
 
 
@@ -59,7 +59,8 @@ class PaymentProcessorControllerIntegrationTest {
                 .andRespond(withSuccess("{ \"approvalCode\" : \"7658b7c8.c679.41a0.8d8c.942efdcd8c96\"}",
                         MediaType.APPLICATION_JSON));
         PaymentRequest paymentRequest = buildPaymentRequest();
-        ResponseEntity<PaymentResponseDto> paymentResponse = testRestTemplate.postForEntity( LOCAL_BASE_URL + port + "/payments/process",
+        ResponseEntity<PaymentResponseDto> paymentResponse = testRestTemplate.postForEntity(LOCAL_BASE_URL + port
+                        + "/payments/process",
                 paymentRequest, PaymentResponseDto.class);
         System.out.println(paymentResponse);
         assertThat(paymentResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -77,7 +78,8 @@ class PaymentProcessorControllerIntegrationTest {
                 .andExpect(method(HttpMethod.POST))
                 .andRespond(withServerError());
         PaymentRequest paymentRequest = buildPaymentRequest();
-        ResponseEntity<PaymentResponseDto> paymentResponse = testRestTemplate.postForEntity( LOCAL_BASE_URL + port + "/payments/process",
+        ResponseEntity<PaymentResponseDto> paymentResponse = testRestTemplate.postForEntity(LOCAL_BASE_URL + port
+                        + "/payments/process",
                 paymentRequest, PaymentResponseDto.class);
 
         assertThat(paymentResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -95,20 +97,21 @@ class PaymentProcessorControllerIntegrationTest {
                 .andRespond(withSuccess("{ \"approvalCode\" : \"7658b7c8.c679.41a0.8d8c.942efdcd8c96\"}",
                         MediaType.APPLICATION_JSON));
         PaymentRequest paymentRequest = buildPaymentRequest();
-        ResponseEntity<PaymentResponseDto> paymentCreationResponse = testRestTemplate.postForEntity( LOCAL_BASE_URL + port + "/payments/process",
+        ResponseEntity<PaymentResponseDto> paymentCreationResponse = testRestTemplate.postForEntity(LOCAL_BASE_URL
+                        + port + "/payments/process",
                 paymentRequest, PaymentResponseDto.class);
         long createdPaymentId = paymentCreationResponse.getBody().getId();
 
-        ResponseEntity<PaymentResponseDto> paymentRetrievalResponse = testRestTemplate.getForEntity( LOCAL_BASE_URL + port + "/payments/"
-                + createdPaymentId, PaymentResponseDto.class);
+        ResponseEntity<PaymentResponseDto> paymentRetrievalResponse = testRestTemplate.getForEntity(LOCAL_BASE_URL
+                + port + "/payments/" + createdPaymentId, PaymentResponseDto.class);
         assertThat(paymentRetrievalResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(paymentCreationResponse.getBody()).isEqualTo(paymentCreationResponse.getBody());
     }
 
     @Test
     void getPaymentStatusForNotFoundPayment() {
-        ResponseEntity<String> paymentRetrievalResponse = testRestTemplate.getForEntity( LOCAL_BASE_URL + port + "/payments/"
-                + 11111L , String.class);
+        ResponseEntity<String> paymentRetrievalResponse = testRestTemplate.getForEntity(LOCAL_BASE_URL
+                + port + "/payments/" + 11111L, String.class);
         assertThat(paymentRetrievalResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(paymentRetrievalResponse.getBody()).isEqualTo("The requested payment does not exist");
     }
@@ -120,26 +123,27 @@ class PaymentProcessorControllerIntegrationTest {
                 .andRespond(withSuccess("{ \"approvalCode\" : \"7658b7c8.c679.41a0.8d8c.942efdcd8c96\"}",
                         MediaType.APPLICATION_JSON));
         PaymentRequest paymentRequest = buildPaymentRequest();
-        ResponseEntity<PaymentResponseDto> paymentCreationResponse = testRestTemplate.postForEntity( LOCAL_BASE_URL + port + "/payments/process",
-                paymentRequest, PaymentResponseDto.class);
+        ResponseEntity<PaymentResponseDto> paymentCreationResponse = testRestTemplate.postForEntity(LOCAL_BASE_URL
+                        + port + "/payments/process", paymentRequest, PaymentResponseDto.class);
         long createdPaymentId = paymentCreationResponse.getBody().getId();
 
-        testRestTemplate.put( LOCAL_BASE_URL + port + "/payments/{id}/cancel",null, createdPaymentId);
+        testRestTemplate.put(LOCAL_BASE_URL + port + "/payments/{id}/cancel", null, createdPaymentId);
 
-        ResponseEntity<PaymentResponseDto> paymentRetrievalResponse = testRestTemplate.getForEntity( LOCAL_BASE_URL + port + "/payments/"
-                + createdPaymentId, PaymentResponseDto.class);
+        ResponseEntity<PaymentResponseDto> paymentRetrievalResponse = testRestTemplate.getForEntity(LOCAL_BASE_URL
+                + port + "/payments/" + createdPaymentId, PaymentResponseDto.class);
         PaymentResponseDto canceledPayment = paymentRetrievalResponse.getBody();
         assertThat(canceledPayment.getStatus()).isEqualTo(PaymentStatus.CANCELED);
     }
 
     @Test
     void cancelNotFoundPayment() {
-        ResponseEntity<Void> cancelResponse = testRestTemplate.exchange( LOCAL_BASE_URL + port + "/payments/1/cancel", HttpMethod.PUT, null, Void.class);
+        ResponseEntity<Void> cancelResponse = testRestTemplate.exchange(LOCAL_BASE_URL + port
+                + "/payments/115500/cancel", HttpMethod.PUT, null, Void.class);
         assertThat(cancelResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     private PaymentRequest buildPaymentRequest() {
-       return new PaymentRequest("5556234665645656", LocalDateTime.now(),
+        return new PaymentRequest("5556234665645656", LocalDateTime.now(),
                 123, 200D, "$");
     }
 }
