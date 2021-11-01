@@ -1,0 +1,28 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "POST",
+        "url": "/process"
+      },
+      "response": {
+        "status": "200",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "transformers": [
+          "process-transformer"
+        ]
+      }
+    },
+    {
+      "request": {
+        "method": "POST",
+        "urlPattern": "/.*/cancel"
+      },
+      "response": {
+        "status": "200"
+      }
+    }
+  ]
+}

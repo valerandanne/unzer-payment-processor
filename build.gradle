@@ -1,0 +1,47 @@
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.5.31"
+    id 'org.springframework.boot' version '2.5.2'
+}
+
+group 'com.unzer'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation 'org.projectlombok:lombok:1.18.18'
+
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.5.5'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.5.5'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.5.5'
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.10'
+    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.10'
+    implementation group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.5.5'
+
+    implementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+    implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+
+    implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+    implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.5.6'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.21.0'
+
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.toString()
+    }
+}
